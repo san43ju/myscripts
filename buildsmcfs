@@ -8,57 +8,95 @@ deploy_dir=/opt/jetty-lowes-r7/webapps/smcfs
 # navigate to bin
 cd ${install_dir}/bin
 
-#echo "Enter option:"
-#echo "[1] smcfs full build"
-#echo "[2] resource jar build"
-#echo "[3] entities jar build"
-#read -p "Enter option #:" answer
-
 echo "********************************************"
 echo "*            Choose option number          *"
-echo "*[1] smcfs full build                      *"
-echo "*[2] resource jar build                    *"
-echo "*[3] deploy resource jar                   *"
-echo "*[4] build and deploy resource jar         *"
-echo "*[5] entity jar build                      *"
-echo "*[6] deploy entity jar                     *"
-echo "*[7] build and deploy entity jar           *"
+echo "********************************************"
+echo "* Resource jar tasks                       *"
+echo "*[1] resource jar build                    *"
+echo "*[2] stage resource jar                    *"
+echo "*[3] automated resource jar deployment     *"
+echo "*                                          *"
+echo "* Entity jar tasks                         *"
+echo "*[4] entity jar build                      *"
+echo "*[5] stage entity jar                      *"
+echo "*[6] automated entity jar deployment       *"
+echo "*                                          *"
+echo "* Full build tasks                         *"
+echo "*[7] smcfs build                           *"
+echo "*[8] stage smcfs                           *"
+echo "*[9] automated smcfs deployment            *"
 echo "********************************************"
 read -p "Enter option #:" answer
 
 case $answer in
- [1]) # build ear
-        echo ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
-        ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
-	;;
- [2]) # build resource jar
+ [1]) # build resource jar
         echo ${install_dir}/bin/deployer.sh -t resourcejar
         ${install_dir}/bin/deployer.sh -t resourcejar
-	;;
- [3]) # deploy resource jar
+		;;
+ [2]) # stage resource jar
         echo cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
         cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
-	;;
- [4]) # build and deploy resource jar
- 	echo ${install_dir}/bin/deployer.sh -t resourcejar
-        ${install_dir}/bin/deployer.sh -t resourcejar	
-	echo cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
-        cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
-	;;
- [5]) # build entity jar
-        echo ./deployer.sh -t entitydeployer
-        ./deployer.sh -t entitydeployer
-	;;
- [6]) # deploy entity jar
+		;;
+ [4]) # build entity jar
+        echo ${install_dir}/bin/deployer.sh -t entitydeployer
+        ${install_dir}/bin/deployer.sh -t entitydeployer
+		;;
+ [5]) # stage entity jar
         echo cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
         cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
-	;;
- [7]) # build and deploy entity jar
-	echo ./deployer.sh -t entitydeployer
-        ./deployer.sh -t entitydeployer
-	echo cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
+		;;
+ [7]) # build ear
+        echo ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+        ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+		;;
+ [8]) # stage ear
+		rm -rf ${deploy_dir}
+		mkdir ${deploy_dir}
+		cp -vf ${install_dir}/external_deployments/smcfs.ear ${deploy_dir}
+		unzip -o ${deploy_dir}/smcfs.ear -d ${deploy_dir}/smcfs_ear
+		rm -rf ${deploy_dir}/smcfs.ear
+		mv -f ${deploy_dir}/smcfs_ear/smcfs.war ${deploy_dir}
+		unzip -o ${deploy_dir}/smcfs.war -d ${deploy_dir}
+		rm -rf ${deploy_dir}/smcfs.war
+		mv -vf ${deploy_dir}/smcfs_ear/*.jar ${deploy_dir}/WEB-INF/lib/
+		rm -rf ${deploy_dir}/smcfs_ear
+		;;
+ [3]) # automated deploy resource jar
+		echo ${install_dir}/bin/deployer.sh -t resourcejar
+        ${install_dir}/bin/deployer.sh -t resourcejar
+		./stopall
+		echo cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
+        cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
+		./startall
+		;;
+ [6]) # automated deploy entity jar
+		echo ${install_dir}/bin/deployer.sh -t entitydeployer
+        ${install_dir}/bin/deployer.sh -t entitydeployer
+		./stopall
+        echo cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
         cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
-	;;
+		./startall
+		;;
+ [9]) # automated deploy ear
+		# build
+		echo ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+        ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+		# stop server
+		./stopall
+		# stage
+		rm -rf ${deploy_dir}
+		mkdir ${deploy_dir}
+		cp -vf ${install_dir}/external_deployments/smcfs.ear ${deploy_dir}
+		unzip -o ${deploy_dir}/smcfs.ear -d ${deploy_dir}/smcfs_ear
+		rm -rf ${deploy_dir}/smcfs.ear
+		mv -f ${deploy_dir}/smcfs_ear/smcfs.war ${deploy_dir}
+		unzip -o ${deploy_dir}/smcfs.war -d ${deploy_dir}
+		rm -rf ${deploy_dir}/smcfs.war
+		mv -vf ${deploy_dir}/smcfs_ear/*.jar ${deploy_dir}/WEB-INF/lib/
+		rm -rf ${deploy_dir}/smcfs_ear
+		# start server
+		./startall
+		;;
   *) echo "***********************************************"
      echo "*    ERROR! please enter a valid option.      *"
      echo "***********************************************"
