@@ -1,0 +1,7 @@
+#!/bin/bash
+/opt/jetty-simulator/bin/logs.sh
+nohup /opt/jetty-simulator/bin/jetty.sh start &
+/opt/jetty-lowes-r7/bin/logs.sh
+nohup /opt/jetty-lowes-r7/bin/jetty.sh start &
+/opt/apache-activemq-5.11.1/bin/activemq start 
+echo tail -1000f /opt/jetty-lowes-r7/logs/2*.log

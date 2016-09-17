@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# config parameters
+install_dir=/home/sanju/SupplyChainApps/85/LOWESR7
+app_server=weblogic
+deploy_dir=/opt/jetty-lowes-r7/webapps/smcfs
+
+# navigate to bin
+cd ${install_dir}/bin
+
+#echo "Enter option:"
+#echo "[1] smcfs full build"
+#echo "[2] resource jar build"
+#echo "[3] entities jar build"
+#read -p "Enter option #:" answer
+
+echo "********************************************"
+echo "*            Choose option number          *"
+echo "*[1] smcfs full build                      *"
+echo "*[2] resource jar build                    *"
+echo "*[3] deploy resource jar                   *"
+echo "*[4] build and deploy resource jar         *"
+echo "*[5] entity jar build                      *"
+echo "*[6] deploy entity jar                     *"
+echo "*[7] build and deploy entity jar           *"
+echo "********************************************"
+read -p "Enter option #:" answer
+
+case $answer in
+ [1]) # build ear
+        echo ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+        ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+	;;
+ [2]) # build resource jar
+        echo ${install_dir}/bin/deployer.sh -t resourcejar
+        ${install_dir}/bin/deployer.sh -t resourcejar
+	;;
+ [3]) # deploy resource jar
+        echo cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
+        cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
+	;;
+ [4]) # build and deploy resource jar
+ 	echo ${install_dir}/bin/deployer.sh -t resourcejar
+        ${install_dir}/bin/deployer.sh -t resourcejar	
+	echo cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
+        cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
+	;;
+ [5]) # build entity jar
+        echo ./deployer.sh -t entitydeployer
+        ./deployer.sh -t entitydeployer
+	;;
+ [6]) # deploy entity jar
+        echo cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
+        cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
+	;;
+ [7]) # build and deploy entity jar
+	echo ./deployer.sh -t entitydeployer
+        ./deployer.sh -t entitydeployer
+	echo cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
+        cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
+	;;
+  *) echo "***********************************************"
+     echo "*    ERROR! please enter a valid option.      *"
+     echo "***********************************************"
+esac

@@ -1,0 +1,6 @@
+#!/bin/bash
+/opt/jetty-simulator/bin/logs.sh
+/opt/jetty-simulator/bin/jetty.sh stop
+/opt/apache-activemq-5.11.1/bin/activemq stop 
+/opt/jetty-lowes-r7/bin/logs.sh
+/opt/jetty-lowes-r7/bin/jetty.sh stop
