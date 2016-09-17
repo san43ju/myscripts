@@ -1,0 +1,10 @@
+#!/bin/bash
+#echo "# myscripts" >> README.md
+#git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/san43ju/myscripts.git
+git push -u origin master
+
+# color coded diffs
+git config --global core.autocrlf
