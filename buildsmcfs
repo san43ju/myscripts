@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # config parameters
-install_dir=/home/sanju/SupplyChainApps/85/LOWESR7
+install_dir=/opt/apps/SupplyChainApps/95/OOB
 app_server=weblogic
-deploy_dir=/opt/jetty-lowes-r7/webapps/smcfs
+deploy_dir=/opt/apps/jetty-oob-95/webapps/smcfs
+isccs_install=/opt/apps/weblogic/user_projects/domains/mydomain/autodeploy/isccsdev
+wsc_install=/opt/apps/weblogic_store/user_projects/domains/mydomain/autodeploy/wsc
 
 # navigate to bin
 cd ${install_dir}/bin
@@ -25,6 +27,16 @@ echo "* Full build tasks                         *"
 echo "*[7] smcfs build                           *"
 echo "*[8] stage smcfs                           *"
 echo "*[9] automated smcfs deployment            *"
+echo "*                                          *"
+echo "* Internet Call Center                     *"
+echo "*[a] build isccsdev                        *"
+echo "*[b] stage isccsdev                        *"
+echo "*[c] automated isccsdev deployment         *"
+echo "*                                          *"
+echo "* Web Store                                *"
+echo "*[d] build wsc                             *"
+echo "*[e] stage wsc                             *"
+echo "*[f] automated wsc deployment              *"
 echo "********************************************"
 read -p "Enter option #:" answer
 
@@ -60,29 +72,30 @@ case $answer in
 	rm -rf ${deploy_dir}/smcfs.war
 	mv -vf ${deploy_dir}/smcfs_ear/*.jar ${deploy_dir}/WEB-INF/lib/
 	rm -rf ${deploy_dir}/smcfs_ear
+        cp -vf /opt/apps/apache-activemq-5.14.0/activemq-all-5.14.0.jar ${deploy_dir}/WEB-INF/lib/
 	;;
  [3]) # automated deploy resource jar
 	echo ${install_dir}/bin/deployer.sh -t resourcejar
         ${install_dir}/bin/deployer.sh -t resourcejar
-	/home/sanju/build/stopall
+	/home/sanju/myscripts/stopall
 	echo cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
         cp -vf ${install_dir}/jar/platform/5_0/resources.jar ${deploy_dir}/WEB-INF/lib/resources.jar
-	/home/sanju/build/startall
+	/home/sanju/myscripts/startall
 	;;
  [6]) # automated deploy entity jar
 	echo ${install_dir}/bin/deployer.sh -t entitydeployer
         ${install_dir}/bin/deployer.sh -t entitydeployer
-	/home/sanju/build/stopall
+	/home/sanju/myscripts/stopall
         echo cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
         cp -vf ${install_dir}/jar/platform/5_0/entities.jar ${deploy_dir}/WEB-INF/lib/entities.jar
-	/home/sanju/build/startall
+	/home/sanju/myscripts/startall
 	;;
  [9]) # automated deploy ear
 	# build
 	echo ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
         ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=smcfs -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
 	# stop server
-	/home/sanju/build/stopall
+	/home/sanju/myscripts/stopall
 	# stage
 	rm -rf ${deploy_dir}
 	mkdir ${deploy_dir}
@@ -94,12 +107,47 @@ case $answer in
 	rm -rf ${deploy_dir}/smcfs.war
 	mv -vf ${deploy_dir}/smcfs_ear/*.jar ${deploy_dir}/WEB-INF/lib/
 	rm -rf ${deploy_dir}/smcfs_ear
+        cp -vf /opt/apps/apache-activemq-5.14.0/activemq-all-5.14.0.jar ${deploy_dir}/WEB-INF/lib/
 	# start server
-	/home/sanju/build/startall
+	/home/sanju/myscripts/startall
 	;;
+ [a]) # build isccsdev
+        echo ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=isccsdev -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+        ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=isccsdev -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+        ;;
+ [b]) # stage isccsdev
+        rm -rf ${isccs_install}
+        mkdir ${isccs_install}
+        cp -vf ${install_dir}/external_deployments/smcfs.ear ${isccs_install}
+        unzip -o ${isccs_install}/smcfs.ear -d ${isccs_install}/smcfs_ear
+        rm -rf ${isccs_install}/smcfs.ear
+        mv -f ${isccs_install}/smcfs_ear/isccsdev.war ${isccs_install}
+        unzip -o ${isccs_install}/isccsdev.war -d ${isccs_install}
+        rm -rf ${isccs_install}/isccsdev.war
+        mv -vf ${isccs_install}/smcfs_ear/*.jar ${isccs_install}/WEB-INF/lib/
+        rm -rf ${isccs_install}/smcfs_ear
+        cp -vf /opt/apps/apache-activemq-5.14.0/activemq-all-5.14.0.jar ${isccs_install}/WEB-INF/lib/         	
+        ;;
+ [d]) # build wsc
+        echo ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=wscdev -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+        ${install_dir}/bin/buildear.sh -Dappserver=${app_server} -Dwarfiles=wscdev -Dearfile=smcfs.ear -Dnodocear=true -Ddevmode=true -Dnowebservice=true create-ear
+        ;;
+ [e]) # stage wsc
+        rm -rf ${wsc_install}
+        mkdir ${wsc_install}
+        cp -vf ${install_dir}/external_deployments/smcfs.ear ${wsc_install}
+        unzip -o ${wsc_install}/smcfs.ear -d ${wsc_install}/smcfs_ear
+        rm -rf ${wsc_install}/smcfs.ear
+        mv -f ${wsc_install}/smcfs_ear/wscdev.war ${wsc_install}
+        unzip -o ${wsc_install}/wscdev.war -d ${wsc_install}
+        rm -rf ${wsc_install}/wscdev.war
+        mv -vf ${wsc_install}/smcfs_ear/*.jar ${wsc_install}/WEB-INF/lib/
+        rm -rf ${wsc_install}/smcfs_ear
+        cp -vf /opt/apps/apache-activemq-5.14.0/activemq-all-5.14.0.jar ${wsc_install}/WEB-INF/lib/
+        ;;
  [0]) # test scripts
-	/home/sanju/build/stopall
-	/home/sanju/build/startall 
+	/home/sanju/myscripts/stopall
+	/home/sanju/myscripts/startall 
         ;;
   *) echo "***********************************************"
      echo "*    ERROR! please enter a valid option.      *"
