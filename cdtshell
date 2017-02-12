@@ -1,0 +1,12 @@
+
+# generate diffs
+./cdtshell.sh -Source XML -SourcePassword -Target local -TargetPassword Sterling12 -DoNotSynchronize Y -ExportDir /media/psf/Home/Downloads/documents/lowes/CDT/cdt_swd/swd_diffs
+
+
+# apply diffs
+./cdtshell.sh -Source XML -SourcePassword -Target local -TargetPassword Sterling12 -DoNotSynchronize N -ImportDir /media/psf/Home/Downloads/documents/lowes/CDT/cdt_swd/swd_diffs
+
+
+# directly compare and apply diffs
+./cdtshell.sh -Source XML -SourcePassword -Target local -TargetPassword Sterling12 -DoNotSynchronize N 
+

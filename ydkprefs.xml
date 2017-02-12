@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<preferences>
+    <configsynch>
+        <Settings ReportsDir="/home/sanju/exports">
+            <AuditDeployment ValidateLockid="N" ValidateOldValues="Y" ValidateRecordExistsBeforeDelete="Y"/>
+        </Settings>
+        <SourceDatabases>
+            <Database Name="N4DOMOQ4" className="oracle.jdbc.OracleDriver" dbType="oracle" folder="" jdbcURL="jdbc:oracle:thin:@oradomqa1.lowes.com:1521:DOMQA2" schema="N4DOMOQ4" user="N4DOMOQ4"/>
+        </SourceDatabases>
+        <TargetDatabases>
+            <Database Name="XMLDUMP" className="" dbType="XML" folder="/home/sanju/cdt_dump" httpurl="http://&lt;host&gt;:&lt;port&gt;/&lt;context-root&gt;/interop/InteropHttpServlet" httpuser="" jdbcURL="" schema="" user=""/>
+        </TargetDatabases>
+        <SourceTargetPrefs>
+            <SourceTargetPrefs>
+                <SourceTargetPair SourceDatabase="N4DOMOQ4" TargetDatabase="XMLDUMP">
+                    <Transformations/>
+                    <Ignore>
+                        <Table Name="YFS_ATTRIBUTE_GROUP"/>
+			<Table Name="YFS_ATTRIBUTE"/>
+			<Table Name="YFS_VENDOR"/>
+			<Table Name="YFS_ITEM"/>
+			<Table Name="YFS_ITEM_OPTION"/>
+			<Table Name="YFS_ITEM_SERVICE_ASSOC"/>
+			<Table Name="YFS_ASSOCIATION"/>
+			<Table Name="YFS_ADDITIONAL_ATTRIBUTE"/>
+			<Table Name="YFS_ITEM_UOM"/>
+			<Table Name="YFS_ITEM_ALIAS"/>
+			<Table Name="YFS_ITEM_NODE_DEFN"/>
+			<Table Name="YFS_CATEGORY_ITEM"/>
+			<Table Name="YFS_ITEM_ATTR"/>
+                    </Ignore>
+                    <AppendOnly>
+                    </AppendOnly>
+                </SourceTargetPair>
+				<SourceTargetPair SourceDatabase="N4DOMOP2" TargetDatabase="XMLDUMP">
+                    <Transformations/>
+                    <Ignore>
+                        <Table Name="YFS_ERROR_CODE"/>
+			<Table Name="YFS_ERROR_CAUSE_ACTION"/>
+			<Table Name="YFS_RESOURCE"/>
+			<Table Name="YFS_RESOURCE_PERMISSION"/>
+			<Table Name="YFS_ZIP_CODE_LOCATION"/>
+			<Table Name="YFS_PERSON_INFO"/>
+			<Table Name="YFS_ATTRIBUTE_GROUP"/>
+			<Table Name="YFS_ATTRIBUTE"/>
+			<Table Name="YFS_CALENDAR"/>
+			<Table Name="YFS_CALENDAR_DAY_EXCP"/>
+			<Table Name="YFS_ORG_ENTERPRISE"/>
+			<Table Name="YFS_SHIP_NODE"/>
+			<Table Name="YFS_NODE_TRANSFER_SCHEDULE"/>
+			<Table Name="YFS_NODE_TRAN_SCH_OVERRIDE"/>
+			<Table Name="YFS_NODE_NOTIFICATION_PERD"/>
+			<Table Name="YFS_NODE_NOTIFICATION"/>
+			<Table Name="YFS_NODE_SRVC_PICKUP_OVR"/>
+			<Table Name="YFS_VENDOR"/>
+			<Table Name="YFS_ITEM"/>
+			<Table Name="YFS_ITEM_OPTION"/>
+			<Table Name="YFS_ITEM_SERVICE_ASSOC"/>
+			<Table Name="YFS_ASSOCIATION"/>
+			<Table Name="YFS_ADDITIONAL_ATTRIBUTE"/>
+			<Table Name="YFS_ITEM_UOM"/>
+			<Table Name="YFS_ITEM_ALIAS"/>
+			<Table Name="YFS_ITEM_NODE_DEFN"/>
+			<Table Name="YFS_CATEGORY_ITEM"/>
+			<Table Name="YFS_ITEM_ATTR"/>
+			<Table Name="YFS_USER"/>
+			<Table Name="YFS_USER_GROUP_LIST"/>
+			<Table Name="YFS_QUEUE_SUBSCRIPTION"/>
+                    </Ignore>
+                    <AppendOnly>
+                    </AppendOnly>
+                </SourceTargetPair>
+            </SourceTargetPrefs>
+        </SourceTargetPrefs>
+    </configsynch>
+</preferences>
+
