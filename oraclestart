@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 lsnrctl status
 lsnrctl start
 sqlplus / as sysdba @startdb.sql
